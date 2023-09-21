@@ -1,0 +1,15 @@
+package com.example.pexelsapp.data.repository
+
+import android.app.appsearch.SearchResult
+import com.example.pexelsapp.data.remote.PexelsApi
+import com.example.pexelsapp.data.remote.dto.SearchResultDto
+import com.example.pexelsapp.domain.repository.PexelsRepository
+import javax.inject.Inject
+
+class PexelsRepositoryImpl @Inject constructor(
+    private val api: PexelsApi
+): PexelsRepository {
+    override suspend fun getPhotos(): SearchResultDto {
+        return api.getPhotos()
+    }
+}
