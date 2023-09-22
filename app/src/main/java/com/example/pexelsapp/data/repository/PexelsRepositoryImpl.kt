@@ -9,7 +9,11 @@ import javax.inject.Inject
 class PexelsRepositoryImpl @Inject constructor(
     private val api: PexelsApi
 ): PexelsRepository {
-    override suspend fun getPhotos(): SearchResultDto {
-        return api.getPhotos()
+    override suspend fun getPhotos(input: String): SearchResultDto {
+        return if (input != "") {
+            api.getPhotos(input = input)
+        } else {
+            api.getCurated()
+        }
     }
 }

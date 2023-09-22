@@ -13,11 +13,11 @@ class GetPhotosUseCase @Inject constructor(
     private val repository: PexelsRepository
 ) {
 
-    operator fun invoke(): Flow<Resource<SearchResult>> = flow {
+    operator fun invoke(input: String): Flow<Resource<SearchResult>> = flow {
 
         try {
             emit(Resource.Loading())
-            val result = repository.getPhotos().toSearchResult()
+            val result = repository.getPhotos(input).toSearchResult()
             emit(Resource.Success(result))
         } catch (e: HttpException) {
             emit(Resource.Error(e.localizedMessage ?: "an unexpected error occurred..."))

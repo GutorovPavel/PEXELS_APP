@@ -5,5 +5,5 @@ import com.example.pexelsapp.data.remote.dto.SearchResultDto
 
 interface PexelsRepository {
 
-    suspend fun getPhotos(): SearchResultDto
+    suspend fun getPhotos(input: String): SearchResultDto
 }

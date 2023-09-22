@@ -1,23 +1,81 @@
 package com.example.pexelsapp.presentation.home
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.pexelsapp.presentation.home.components.ErrorScreen
+import com.example.pexelsapp.presentation.home.components.PhotoItem
+import com.example.pexelsapp.presentation.home.components.SearchBar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-
     val photos = viewModel.state.value.searchResult?.photos
-    val isLoading = viewModel.state.value.isLoading
+    val state = viewModel.state.value
 
-    Column(Modifier.fillMaxSize()){
-        Text(text = photos.toString())
+    val searchText by viewModel.searchText.collectAsState()
+//    val isSearching by viewModel.isSearching.collectAsState()
+
+    Scaffold { paddingValue ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValue)
+                .padding(24.dp),
+        ) {
+            SearchBar(
+                value = searchText,
+                onValueChanged = viewModel::onSearchTextChange
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                if (state.isLoading) {
+                    CircularProgressIndicator()
+                } else {
+                    LazyVerticalStaggeredGrid(
+                        modifier = Modifier.fillMaxWidth(),
+                        columns = StaggeredGridCells.Fixed(2),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalItemSpacing = 16.dp
+                    ) {
+                        if (photos != null) {
+                            items(photos) { photo ->
+                                PhotoItem(item = photo)
+                            }
+                        }
+                    }
+
+                }
+                if (state.error.isNotBlank()) {
+                    ErrorScreen(error = state.error)
+                }
+            }
+        }
     }
 }
