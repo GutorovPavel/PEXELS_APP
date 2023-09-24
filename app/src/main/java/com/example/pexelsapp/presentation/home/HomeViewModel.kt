@@ -4,7 +4,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pexelsapp.data.remote.dto.Photo
 import com.example.pexelsapp.domain.usecases.GetPhotosUseCase
 import com.example.pexelsapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel

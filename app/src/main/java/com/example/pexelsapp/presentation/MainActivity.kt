@@ -11,7 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.example.pexelsapp.presentation.home.HomeScreen
+import com.example.pexelsapp.presentation.navigation.NavGraph
 import com.example.pexelsapp.ui.theme.PexelsAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,7 +23,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PexelsAppTheme {
-                HomeScreen()
+                NavGraph(navController = rememberNavController())
             }
         }
     }

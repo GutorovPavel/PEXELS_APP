@@ -1,9 +1,8 @@
 package com.example.pexelsapp.presentation.home.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,7 +18,8 @@ import com.example.pexelsapp.data.remote.dto.Photo
 
 @Composable
 fun PhotoItem(
-    item: Photo
+    item: Photo,
+    onClick: (Photo) -> Unit
 ) {
 //    For coil we need to specify the height.
 //    let's calculate it by dividing the original height
@@ -35,14 +35,16 @@ fun PhotoItem(
             .fillMaxWidth()
             .height(height)
             .clip(RoundedCornerShape(16.dp))
+            .clickable { onClick(item) }
     ) {
         Image(
             painter = rememberAsyncImagePainter(
-                model = item.src.original,
+                model = item.src.large2x,
                 contentScale = ContentScale.FillHeight
             ),
             contentDescription = "image",
-            contentScale = ContentScale.FillWidth
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier.fillMaxSize()
         )
     }
 }

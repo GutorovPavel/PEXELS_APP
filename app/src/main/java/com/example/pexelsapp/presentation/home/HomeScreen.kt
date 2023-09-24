@@ -24,13 +24,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.pexelsapp.presentation.home.components.ErrorScreen
 import com.example.pexelsapp.presentation.home.components.PhotoItem
 import com.example.pexelsapp.presentation.home.components.SearchBar
+import com.example.pexelsapp.presentation.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    navController: NavController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val photos = viewModel.state.value.searchResult?.photos
@@ -66,7 +69,13 @@ fun HomeScreen(
                     ) {
                         if (photos != null) {
                             items(photos) { photo ->
-                                PhotoItem(item = photo)
+                                PhotoItem(
+                                    item = photo,
+                                    onClick = {
+                                        navController.navigate(Screen.Detail.route
+                                                + "?photoId=${photo.id}")
+                                    }
+                                )
                             }
                         }
                     }
