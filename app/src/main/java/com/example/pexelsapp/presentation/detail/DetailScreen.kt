@@ -21,6 +21,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -56,9 +57,9 @@ fun DetailScreen(
                         modifier = Modifier
                             .clip(RoundedCornerShape(12.dp))
                             .clickable {
-
+                                navController.popBackStack()
                             }
-                            .background(Color(0xFFF3F5F9))
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
                     ) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
@@ -80,21 +81,15 @@ fun DetailScreen(
         }
     ) { paddingValues ->
 
-        if (state.isLoading) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
-        } else {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues = paddingValues)
-                    .padding(horizontal = 24.dp)
-            ) {
-
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues = paddingValues)
+                .padding(horizontal = 24.dp)
+        ) {
+            if (!state.isLoading) {
                 Box(
-                    modifier = Modifier
-                        .weight(1f),
+                    modifier = Modifier.weight(1f),
                     contentAlignment = Alignment.Center
                 ) {
                     if (state.photo != null) {
@@ -110,59 +105,65 @@ fun DetailScreen(
                         )
                     }
                 }
+            } else {
                 Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 24.dp)
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.Center
+                ) {}
+            }
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 24.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .width(180.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.secondaryContainer),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .width(180.dp)
-                            .clip(CircleShape)
-                            .background(Color(0xFFF3F5F9)),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(modifier = Modifier
-                            .clip(CircleShape)
-                            .background(Color(0xFFBB1020))
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Download,
-                                contentDescription = "download",
-                                tint = Color.White,
-                                modifier = Modifier.padding(14.dp)
-                            )
-                        }
-                        Box(
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text(
-                                text = "Download",
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(end = 10.dp),
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
-                    Box(
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .clickable {
-
-                            }
-                            .background(Color(0xFFF3F5F9))
-                            .align(Alignment.CenterEnd)
+                    Box(modifier = Modifier
+                        .clip(CircleShape)
+                        .background(Color(0xFFBB1020))
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Bookmark,
-                            contentDescription = "add bookmark",
+                            imageVector = Icons.Default.Download,
+                            contentDescription = "download",
+                            tint = Color.White,
                             modifier = Modifier.padding(14.dp)
                         )
                     }
+                    Box(
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = "Download",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(end = 10.dp),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable {
+
+                        }
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .align(Alignment.CenterEnd)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Bookmark,
+                        contentDescription = "add bookmark",
+                        modifier = Modifier.padding(14.dp)
+                    )
                 }
             }
         }
+
         if (state.error.isNotBlank()) {
             ErrorScreen(error = state.error)
         }

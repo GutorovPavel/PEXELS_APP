@@ -8,5 +8,5 @@ data class SearchResult(
 //    val page: Int,
 //    val per_page: Int,
     val photos: List<Photo>,
-    val total_results: Int
+    val total_results: Int? = 0
 )

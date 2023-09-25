@@ -4,46 +4,66 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pexelsapp.domain.usecases.GetFeaturedUseCase
 import com.example.pexelsapp.domain.usecases.GetPhotosUseCase
 import com.example.pexelsapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getPhotosUseCase: GetPhotosUseCase
+    private val getPhotosUseCase: GetPhotosUseCase,
+    private val getFeaturedUseCase: GetFeaturedUseCase
 ): ViewModel() {
 
-    private val _state = mutableStateOf(HomeState())
-    val state: State<HomeState> = _state
+    private val _photoState = mutableStateOf(HomeState())
+    val photoState: State<HomeState> = _photoState
+    private val _featuredState = mutableStateOf(FeaturedState())
+    val featuredState: State<FeaturedState> = _featuredState
+
+//    private val _searchResult = MutableStateFlow(SearchResult(emptyList()))
+//    val searchResult = _searchResult.asStateFlow()
+//    private val _featured = MutableStateFlow(Featured(emptyList()))
+//    val featured = _featured.asStateFlow()
 
     init {
+        getFeatured()
         getPhotos("")
     }
 
-    private fun getPhotos(input: String) {
+    fun getPhotos(input: String) {
         getPhotosUseCase(input).onEach {
             when(it) {
                 is Resource.Success -> {
-                    _state.value = HomeState(searchResult = it.data)
+                    _photoState.value = HomeState(searchResult = it.data)
                 }
                 is Resource.Error -> {
-                    _state.value = HomeState(error = it.message ?: "An unexpected error occurred...")
+                    _photoState.value = HomeState(error = it.message ?: "An unexpected error occurred...")
                 }
                 is Resource.Loading -> {
-                    _state.value = HomeState(isLoading = true)
+                    _photoState.value = HomeState(isLoading = true)
+                }
+            }
+        }.launchIn(viewModelScope)
+    }
+    private fun getFeatured() {
+        getFeaturedUseCase().onEach {
+            when(it) {
+                is Resource.Success -> {
+                    _featuredState.value = FeaturedState(featured = it.data)
+                }
+                is Resource.Error -> {
+                    _featuredState.value = FeaturedState(error = it.message ?: "An unexpected error occurred...")
+                }
+                is Resource.Loading -> {
+                    _featuredState.value = FeaturedState(isLoading = true)
                 }
             }
         }.launchIn(viewModelScope)
@@ -57,13 +77,17 @@ class HomeViewModel @Inject constructor(
 
     private var job: Job? = null
 
-    fun onSearchTextChange(text: String) {
+    fun onSearchTextChangeWithUpdate(text: String, timeToUpdate: Long = 1000L) {
         job?.cancel()
         _searchText.value = text
 
         job = viewModelScope.launch {
-            delay(1000L)
+            delay(timeToUpdate)
             getPhotos(text)
         }
+    }
+    fun onSearchTextChange(text: String) {
+        job?.cancel()
+        _searchText.value = text
     }
 }

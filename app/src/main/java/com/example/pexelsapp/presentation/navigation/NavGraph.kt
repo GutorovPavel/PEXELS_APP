@@ -6,6 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.pexelsapp.presentation.bookmarks.BookmarksScreen
 import com.example.pexelsapp.presentation.detail.DetailScreen
 import com.example.pexelsapp.presentation.home.HomeScreen
 
@@ -16,6 +17,9 @@ fun NavGraph(
     NavHost(navController = navController, startDestination = Screen.Home.route) {
         composable(route = Screen.Home.route) {
             HomeScreen(navController)
+        }
+        composable(route = Screen.Bookmarks.route) {
+            BookmarksScreen(navController)
         }
         composable(
             route = Screen.Detail.route + "?photoId={photoId}",
@@ -29,6 +33,9 @@ fun NavGraph(
             )
         ) {
             DetailScreen(navController)
+        }
+        composable(route = Screen.Bookmarks.route) {
+            BookmarksScreen(navController)
         }
     }
 }

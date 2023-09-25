@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.pexelsapp.data.remote.dto.Photo
+import com.example.pexelsapp.util.pxToDp
 
 @Composable
 fun PhotoItem(
@@ -48,7 +49,3 @@ fun PhotoItem(
         )
     }
 }
-
-fun Dp.dpToPx(density: Density) = with(density) { this@dpToPx.toPx() }
-
-fun Int.pxToDp(density: Density) = with(density) { this@pxToDp.toDp() }

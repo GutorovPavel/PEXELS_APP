@@ -1,5 +1,6 @@
 package com.example.pexelsapp.data.remote
 
+import com.example.pexelsapp.data.remote.dto.FeaturedDto
 import com.example.pexelsapp.data.remote.dto.Photo
 import com.example.pexelsapp.data.remote.dto.SearchResultDto
 import com.example.pexelsapp.util.Constants.API_KEY
@@ -27,4 +28,10 @@ interface PexelsApi {
         @Header("Authorization") token: String = API_KEY,
         @Path("id") id: Int
     ): Photo
+
+    @GET("v1/collections/featured")
+    suspend fun getFeatured(
+        @Header("Authorization") token: String = API_KEY,
+        @Query("per_page") number: Int = 7
+    ): FeaturedDto
 }
