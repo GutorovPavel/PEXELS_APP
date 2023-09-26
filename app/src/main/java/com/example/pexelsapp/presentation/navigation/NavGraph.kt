@@ -1,5 +1,8 @@
 package com.example.pexelsapp.presentation.navigation
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -14,11 +17,16 @@ import com.example.pexelsapp.presentation.home.HomeScreen
 fun NavGraph(
     navController: NavHostController
 ) {
+
     NavHost(navController = navController, startDestination = Screen.Home.route) {
-        composable(route = Screen.Home.route) {
+        composable(
+            route = Screen.Home.route
+        ) {
             HomeScreen(navController)
         }
-        composable(route = Screen.Bookmarks.route) {
+        composable(
+            route = Screen.Bookmarks.route
+        ) {
             BookmarksScreen(navController)
         }
         composable(
@@ -30,7 +38,13 @@ fun NavGraph(
                     type = NavType.IntType
                     defaultValue = -1
                 }
-            )
+            ),
+            enterTransition = {
+                slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, animationSpec = tween(400))
+            },
+            exitTransition = {
+                slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, animationSpec = tween(400))
+            }
         ) {
             DetailScreen(navController)
         }

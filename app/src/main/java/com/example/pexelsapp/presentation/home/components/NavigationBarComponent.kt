@@ -36,7 +36,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.pexelsapp.presentation.navigation.Screen
 import com.example.pexelsapp.util.dpToPx
 import com.example.pexelsapp.util.pxToDp
 
@@ -77,9 +79,24 @@ fun NavigationBarComponent(
                 NavigationBarItem(
                     selected = selectedItemIndex == index,
                     onClick = {
-                        selectedItemIndex = index
-                        navController.popBackStack()
-                        navController.navigate(item.route)
+                        if (item.route != currentDestination?.route) {
+                            selectedItemIndex = index
+                            navController.navigate(item.route) {
+                                if (currentDestination != null) {
+                                    popUpTo(currentDestination.id) {
+                                        saveState = true
+                                        inclusive = true
+                                    }
+                                } else {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                        inclusive = true
+                                    }
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
                     },
                     icon = {
                         Icon(
