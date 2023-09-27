@@ -1,7 +1,7 @@
 package com.example.pexelsapp.data.remote
 
 import com.example.pexelsapp.data.remote.dto.FeaturedDto
-import com.example.pexelsapp.data.remote.dto.Photo
+import com.example.pexelsapp.data.remote.dto.PhotoDto
 import com.example.pexelsapp.data.remote.dto.SearchResultDto
 import com.example.pexelsapp.util.Constants.API_KEY
 import retrofit2.http.GET
@@ -27,7 +27,7 @@ interface PexelsApi {
     suspend fun getPhotoById(
         @Header("Authorization") token: String = API_KEY,
         @Path("id") id: Int
-    ): Photo
+    ): PhotoDto
 
     @GET("v1/collections/featured")
     suspend fun getFeatured(

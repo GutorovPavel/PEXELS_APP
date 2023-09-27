@@ -1,6 +1,8 @@
 package com.example.pexelsapp.data.remote.dto
 
-data class Photo(
+import com.example.pexelsapp.domain.model.Photo
+
+data class PhotoDto(
     val alt: String,
     val avg_color: String,
     val height: Int,
@@ -12,4 +14,18 @@ data class Photo(
     val src: Src,
     val url: String,
     val width: Int
-)
+) {
+    fun toPhoto(): Photo = Photo(
+        alt,
+        avg_color,
+        height,
+        id,
+        liked,
+        photographer,
+        photographer_id,
+        photographer_url,
+        src,
+        url,
+        width
+    )
+}

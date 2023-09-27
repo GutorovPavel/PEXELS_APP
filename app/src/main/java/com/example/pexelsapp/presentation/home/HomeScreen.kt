@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.pexelsapp.presentation.home.components.ErrorScreen
 import com.example.pexelsapp.presentation.home.components.NavigationBarComponent
 import com.example.pexelsapp.presentation.home.components.PhotoItem
@@ -62,6 +63,9 @@ fun HomeScreen(
 
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
 
     Scaffold { paddingValue ->
         Column(
@@ -147,8 +151,11 @@ fun HomeScreen(
                                 PhotoItem(
                                     item = photo,
                                     onClick = {
-                                        navController.navigate(Screen.Detail.route
-                                                + "?photoId=${photo.id}")
+                                        if (currentDestination?.route
+                                            ?.contains(Screen.Detail.route) == false) {
+                                                navController.navigate(Screen.Detail.route
+                                                    + "?photoId=${photo.id}")
+                                            }
                                     }
                                 )
                             }

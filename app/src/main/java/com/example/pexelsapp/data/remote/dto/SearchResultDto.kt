@@ -6,7 +6,7 @@ data class SearchResultDto(
     val next_page: String,
     val page: Int,
     val per_page: Int,
-    val photos: List<Photo>,
+    val photos: List<PhotoDto>,
     val total_results: Int
 )
 

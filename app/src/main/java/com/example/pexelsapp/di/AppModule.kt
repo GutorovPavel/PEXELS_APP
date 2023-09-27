@@ -1,9 +1,14 @@
 package com.example.pexelsapp.di
 
+import android.app.Application
+import androidx.room.Room
+import com.example.pexelsapp.data.local.PexelsDatabase
+
 import com.example.pexelsapp.data.remote.PexelsApi
 import com.example.pexelsapp.data.repository.PexelsRepositoryImpl
 import com.example.pexelsapp.domain.repository.PexelsRepository
 import com.example.pexelsapp.util.Constants.BASE_URL
+import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,5 +43,19 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideRepository(api: PexelsApi): PexelsRepository = PexelsRepositoryImpl(api)
+    fun providePexelsDatabse(app: Application): PexelsDatabase {
+        return Room.databaseBuilder(
+            app,
+            PexelsDatabase::class.java,
+            "pexels.db"
+        )
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRepository(
+        api: PexelsApi,
+        db: PexelsDatabase
+    ): PexelsRepository = PexelsRepositoryImpl(api, db.dao)
 }

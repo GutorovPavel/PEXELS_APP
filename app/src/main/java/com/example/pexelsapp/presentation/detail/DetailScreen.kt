@@ -8,17 +8,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -37,8 +35,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.pexelsapp.R
 import com.example.pexelsapp.presentation.home.components.ErrorScreen
-import com.example.pexelsapp.presentation.home.components.PhotoItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,6 +46,7 @@ fun DetailScreen(
 ) {
 
     val state = viewModel.state.value
+    val isSaved = viewModel.isSaved.value
 
     Scaffold (
         topBar = {
@@ -150,15 +149,27 @@ fun DetailScreen(
                     modifier = Modifier
                         .clip(CircleShape)
                         .clickable {
-
+                            state.photo?.let {
+                                if (!isSaved) viewModel.addBookmark(it)
+                                else viewModel.deleteBookmark(it)
+                            }
                         }
                         .background(MaterialTheme.colorScheme.secondaryContainer)
                         .align(Alignment.CenterEnd)
                 ) {
+                    val painter =
+                        if (isSaved) painterResource(id = R.drawable.bookmarks_button_active)
+                        else painterResource(id = R.drawable.bookmarks_inactive)
+
+                    val tint =
+                        if (isSaved) MaterialTheme.colorScheme.primaryContainer
+                        else MaterialTheme.colorScheme.onSurface
+
                     Icon(
-                        imageVector = Icons.Default.Bookmark,
+                        painter = painter,
                         contentDescription = "add bookmark",
-                        modifier = Modifier.padding(14.dp)
+                        modifier = Modifier.padding(14.dp),
+                        tint = tint
                     )
                 }
             }
