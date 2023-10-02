@@ -99,19 +99,28 @@ fun NavigationBarComponent(
                         }
                     },
                     icon = {
+
+                        val painter = if (isSystemInDarkTheme()) {
+                            // check icon not by index cause of ability to navigate not from navigation bar
+                            if (currentDestination?.route == item.route) painterResource(item.selectedIconNight)
+                            else painterResource(item.unselectedIcon)
+                        } else {
+                            if (currentDestination?.route == item.route) painterResource(item.selectedIcon)
+                            else painterResource(item.unselectedIcon)
+                        }
+
+                        val tint = if (currentDestination?.route == item.route)
+                            MaterialTheme.colorScheme.primaryContainer
+                        else
+                            MaterialTheme.colorScheme.onSurface
+
                         Icon(
-                            painter = if (isSystemInDarkTheme()) {
-                                if (index == selectedItemIndex) painterResource(item.selectedIconNight)
-                                else painterResource(item.unselectedIcon)
-                            } else {
-                                if (index == selectedItemIndex) painterResource(item.selectedIcon)
-                                else painterResource(item.unselectedIcon)
-                            },
-                            contentDescription = item.title
+                            painter = painter,
+                            contentDescription = item.title,
+                            tint = tint
                         )
                     },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = MaterialTheme.colorScheme.primaryContainer,
                         indicatorColor = MaterialTheme.colorScheme.surface
                     )
                 )

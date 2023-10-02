@@ -1,5 +1,8 @@
 package com.example.pexelsapp.presentation.home
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -53,7 +56,7 @@ class HomeViewModel @Inject constructor(
             }
         }.launchIn(viewModelScope)
     }
-    private fun getFeatured() {
+    fun getFeatured() {
         getFeaturedUseCase().onEach {
             when(it) {
                 is Resource.Success -> {

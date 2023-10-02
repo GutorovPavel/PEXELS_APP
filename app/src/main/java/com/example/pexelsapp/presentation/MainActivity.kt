@@ -18,6 +18,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.app.ActivityCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
@@ -37,9 +38,19 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         installSplashScreen()
 
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            1
+        )
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+            1
+        )
+
         setContent {
             PexelsAppTheme {
-
 
                 val systemUiController = rememberSystemUiController()
                 val isDarkModeValue = isSystemInDarkTheme()
@@ -56,8 +67,8 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
                         NavigationBarComponent(navController = navHostController)
                     }
-                ) {
-                    NavGraph(navController = navHostController)
+                ) { paddingValues ->
+                    NavGraph(navController = navHostController, paddingValues = paddingValues)
                 }
             }
         }

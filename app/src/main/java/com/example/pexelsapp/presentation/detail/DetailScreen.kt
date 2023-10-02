@@ -27,16 +27,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.pexelsapp.R
-import com.example.pexelsapp.presentation.home.components.ErrorScreen
+import com.example.pexelsapp.presentation.home.components.errorScreens.NoDataScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,6 +46,8 @@ fun DetailScreen(
 
     val state = viewModel.state.value
     val isSaved = viewModel.isSaved.value
+
+    val context = LocalContext.current
 
     Scaffold (
         topBar = {
@@ -70,8 +71,7 @@ fun DetailScreen(
                 title = {
                     Text(
                         text = state.photo?.photographer ?: "",
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 18.sp,
+                        style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.padding(10.dp)
                     )
                 },
@@ -86,97 +86,107 @@ fun DetailScreen(
                 .padding(paddingValues = paddingValues)
                 .padding(horizontal = 24.dp)
         ) {
-            if (!state.isLoading) {
-                Box(
-                    modifier = Modifier.weight(1f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (state.photo != null) {
-                        Image(
-                            painter = rememberAsyncImagePainter(
-                                model = state.photo.src.large,
-                            ),
-                            contentDescription = "image",
-                            contentScale = ContentScale.FillWidth,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(16.dp))
-                        )
-                    }
-                }
+            if (state.error.isNotBlank()) {
+                NoDataScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    text = "Image not found",
+                    textButton = "Explore",
+                    navController = navController
+                )
             } else {
-                Box(
-                    modifier = Modifier.weight(1f),
-                    contentAlignment = Alignment.Center
-                ) {}
-            }
-            Box(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 24.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .width(180.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.secondaryContainer),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(modifier = Modifier
-                        .clip(CircleShape)
-                        .background(Color(0xFFBB1020))
+                if (!state.isLoading) {
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Download,
-                            contentDescription = "download",
-                            tint = Color.White,
-                            modifier = Modifier.padding(14.dp)
-                        )
+                        if (state.photo != null) {
+                            Image(
+                                painter = rememberAsyncImagePainter(
+                                    model = state.photo.src.large,
+                                ),
+                                contentDescription = "image",
+                                contentScale = ContentScale.FillWidth,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(16.dp))
+                            )
+                        }
+                    }
+                } else {
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {}
+                }
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 24.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .width(180.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .clickable {
+                                state.photo?.let {
+                                    viewModel.downloadImage(it.src.original)
+                                }
+                            },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(modifier = Modifier
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primaryContainer)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Download,
+                                contentDescription = "download",
+                                tint = Color.White,
+                                modifier = Modifier.padding(14.dp)
+                            )
+                        }
+                        Box(
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(
+                                text = "Download",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(end = 10.dp),
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
                     Box(
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .clickable {
+                                state.photo?.let {
+                                    if (!isSaved) viewModel.addBookmark(it)
+                                    else viewModel.deleteBookmark(it)
+                                }
+                            }
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .align(Alignment.CenterEnd)
                     ) {
-                        Text(
-                            text = "Download",
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(end = 10.dp),
-                            textAlign = TextAlign.Center
+                        val painter =
+                            if (isSaved) painterResource(id = R.drawable.bookmarks_button_active)
+                            else painterResource(id = R.drawable.bookmarks_inactive)
+
+                        val tint =
+                            if (isSaved) MaterialTheme.colorScheme.primaryContainer
+                            else MaterialTheme.colorScheme.onSurface
+
+                        Icon(
+                            painter = painter,
+                            contentDescription = "add bookmark",
+                            modifier = Modifier.padding(14.dp),
+                            tint = tint
                         )
                     }
                 }
-                Box(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .clickable {
-                            state.photo?.let {
-                                if (!isSaved) viewModel.addBookmark(it)
-                                else viewModel.deleteBookmark(it)
-                            }
-                        }
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
-                        .align(Alignment.CenterEnd)
-                ) {
-                    val painter =
-                        if (isSaved) painterResource(id = R.drawable.bookmarks_button_active)
-                        else painterResource(id = R.drawable.bookmarks_inactive)
-
-                    val tint =
-                        if (isSaved) MaterialTheme.colorScheme.primaryContainer
-                        else MaterialTheme.colorScheme.onSurface
-
-                    Icon(
-                        painter = painter,
-                        contentDescription = "add bookmark",
-                        modifier = Modifier.padding(14.dp),
-                        tint = tint
-                    )
-                }
             }
-        }
-
-        if (state.error.isNotBlank()) {
-            ErrorScreen(error = state.error)
         }
     }
 }

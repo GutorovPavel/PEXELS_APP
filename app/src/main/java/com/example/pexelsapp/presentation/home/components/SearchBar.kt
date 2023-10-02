@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.example.pexelsapp.ui.theme.fontFamily
 
 @Composable
 fun SearchBar(
@@ -90,7 +91,8 @@ fun SearchBar(
                         }
                     ),
                     textStyle = TextStyle(
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontFamily = fontFamily
                     ),
                     cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
                     decorationBox = { innerTextField ->

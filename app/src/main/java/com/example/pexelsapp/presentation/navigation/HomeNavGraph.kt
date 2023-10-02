@@ -10,18 +10,18 @@ import com.example.pexelsapp.presentation.bookmarks.BookmarksScreen
 import com.example.pexelsapp.presentation.detail.DetailScreen
 import com.example.pexelsapp.presentation.home.HomeScreen
 
-@Composable
-fun HomeNavGraph(
-    navController: NavHostController
-) {
-    NavHost(
-        navController = navController,
-        startDestination = Screen.Home.route,
-        route = Graph.Home.route
-    ) {
-        composable(route = Screen.Home.route) {
-            HomeScreen(navController)
-        }
-
-    }
-}
+//@Composable
+//fun HomeNavGraph(
+//    navController: NavHostController
+//) {
+//    NavHost(
+//        navController = navController,
+//        startDestination = Screen.Home.route,
+//        route = Graph.Home.route
+//    ) {
+//        composable(route = Screen.Home.route) {
+//            HomeScreen(navController)
+//        }
+//
+//    }
+//}

@@ -3,10 +3,12 @@ package com.example.pexelsapp.domain.usecases
 import android.util.Log
 import com.example.pexelsapp.domain.model.Photo
 import com.example.pexelsapp.domain.repository.PexelsRepository
+import com.example.pexelsapp.util.Errors
 import com.example.pexelsapp.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
+import java.io.IOException
 import javax.inject.Inject
 
 class GetPhotoByIdUseCase @Inject constructor(
@@ -26,7 +28,9 @@ class GetPhotoByIdUseCase @Inject constructor(
                 emit(Resource.Success(result))
             }
         } catch (e: HttpException) {
-            emit(Resource.Error(e.localizedMessage ?: "an unexpected error occurred..."))
+            emit(Resource.Error(e.localizedMessage ?: Errors.HTTP_ERROR))
+        } catch (e: IOException) {
+            emit(Resource.Error(Errors.IO_ERROR))
         }
     }
 }
