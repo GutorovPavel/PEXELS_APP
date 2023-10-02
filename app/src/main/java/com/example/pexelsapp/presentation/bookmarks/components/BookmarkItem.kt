@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.pexelsapp.data.remote.dto.PhotoDto
 import com.example.pexelsapp.domain.model.Photo
+import com.example.pexelsapp.presentation.home.components.bounceClick
 import com.example.pexelsapp.util.pxToDp
 
 @Composable
@@ -41,6 +42,7 @@ fun BookmarkItem(
         modifier = Modifier
             .fillMaxWidth()
             .height(height)
+            .bounceClick()
             .clip(RoundedCornerShape(16.dp))
             .clickable { onClick(item) }
     ) {

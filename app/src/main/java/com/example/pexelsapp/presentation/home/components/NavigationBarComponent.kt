@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -99,7 +100,6 @@ fun NavigationBarComponent(
                         }
                     },
                     icon = {
-
                         val painter = if (isSystemInDarkTheme()) {
                             // check icon not by index cause of ability to navigate not from navigation bar
                             if (currentDestination?.route == item.route) painterResource(item.selectedIconNight)
@@ -109,15 +109,10 @@ fun NavigationBarComponent(
                             else painterResource(item.unselectedIcon)
                         }
 
-                        val tint = if (currentDestination?.route == item.route)
-                            MaterialTheme.colorScheme.primaryContainer
-                        else
-                            MaterialTheme.colorScheme.onSurface
-
                         Icon(
                             painter = painter,
                             contentDescription = item.title,
-                            tint = tint
+                            tint = Color.Unspecified
                         )
                     },
                     colors = NavigationBarItemDefaults.colors(

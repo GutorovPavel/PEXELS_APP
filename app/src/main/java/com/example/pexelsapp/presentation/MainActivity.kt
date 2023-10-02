@@ -1,8 +1,12 @@
 
 package com.example.pexelsapp.presentation
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.view.animation.AnticipateInterpolator
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -38,16 +42,19 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         installSplashScreen()
 
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            1
-        )
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
-            1
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            splashScreen.setOnExitAnimationListener { splashScreenView ->
+                val slideUp = ObjectAnimator.ofFloat(
+                    splashScreenView,
+                    View.TRANSLATION_Y,
+                    0f,
+                    -splashScreenView.height.toFloat()
+                )
+                slideUp.interpolator = AnticipateInterpolator()
+                slideUp.duration = 200L
+                slideUp.start()
+            }
+        }
 
         setContent {
             PexelsAppTheme {

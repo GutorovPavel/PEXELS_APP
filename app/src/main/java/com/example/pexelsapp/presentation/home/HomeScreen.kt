@@ -1,5 +1,6 @@
 package com.example.pexelsapp.presentation.home
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
@@ -23,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -30,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -60,11 +64,17 @@ fun HomeScreen(
 
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
     Scaffold { paddingValue ->
+        LaunchedEffect(key1 = viewModel.connection.value) {
+            viewModel.isInternetAvailable(context)
+            if (!viewModel.connection.value)
+                Toast.makeText(context, "No internet connection", Toast.LENGTH_LONG).show()
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -90,7 +100,7 @@ fun HomeScreen(
                             Spacer(modifier = Modifier.width(21.dp))
                         }
                         if (chips != null) {
-                            items(chips) { chip ->
+                            itemsIndexed(chips) { index, chip ->
                                 InputChip(
                                     modifier = Modifier.padding(horizontal = 6.dp), // gap between items
                                     selected = (chip.title.lowercase() == searchText.lowercase()),

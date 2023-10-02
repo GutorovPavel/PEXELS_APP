@@ -72,7 +72,8 @@ fun DetailScreen(
                     Text(
                         text = state.photo?.photographer ?: "",
                         style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(10.dp)
+                        modifier = Modifier.padding(10.dp),
+                        textAlign = TextAlign.Center
                     )
                 },
                 modifier = Modifier.padding(20.dp)

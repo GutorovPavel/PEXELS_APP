@@ -31,6 +31,9 @@ class HomeViewModel @Inject constructor(
     private val _featuredState = mutableStateOf(FeaturedState())
     val featuredState: State<FeaturedState> = _featuredState
 
+    private val _connection = mutableStateOf(false)
+    val connection: State<Boolean> = _connection
+
 //    private val _searchResult = MutableStateFlow(SearchResult(emptyList()))
 //    val searchResult = _searchResult.asStateFlow()
 //    private val _featured = MutableStateFlow(Featured(emptyList()))
@@ -92,5 +95,11 @@ class HomeViewModel @Inject constructor(
     fun onSearchTextChange(text: String) {
         job?.cancel()
         _searchText.value = text
+    }
+    fun isInternetAvailable(context: Context) {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE)
+                as ConnectivityManager
+        if (connectivityManager.activeNetwork != null)
+            _connection.value = true
     }
 }
