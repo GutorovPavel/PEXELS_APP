@@ -11,4 +11,4 @@ data class SearchResultDto(
 )
 
 fun SearchResultDto.toSearchResult(): SearchResult
-    = SearchResult(photos, total_results)
+    = SearchResult(next_page, page, photos, total_results)

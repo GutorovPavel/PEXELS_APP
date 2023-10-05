@@ -1,7 +1,11 @@
 package com.example.pexelsapp.presentation.home
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -11,12 +15,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.InputChipDefaults
@@ -28,7 +35,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -40,12 +51,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.pexelsapp.data.remote.dto.PhotoDto
-import com.example.pexelsapp.domain.model.Photo
+import com.example.pexelsapp.presentation.home.components.LoadingBar
 import com.example.pexelsapp.presentation.home.components.errorScreens.ErrorScreen
 import com.example.pexelsapp.presentation.home.components.PhotoItem
 import com.example.pexelsapp.presentation.home.components.SearchBar
 import com.example.pexelsapp.presentation.home.components.errorScreens.NoDataScreen
 import com.example.pexelsapp.presentation.navigation.Screen
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,7 +68,7 @@ fun HomeScreen(
     paddingValues: PaddingValues
 ) {
     val photoState = viewModel.photoState.value
-    val photos = photoState.searchResult?.photos
+    val photos = photoState.searchResult?.photos?: emptyList()
 
     val featuredState = viewModel.featuredState.value
     val chips = featuredState.featured?.collections
@@ -69,16 +82,24 @@ fun HomeScreen(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
+    var page by remember {
+        mutableIntStateOf(1)
+    }
+
+    val gridState = rememberLazyStaggeredGridState()
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold { paddingValue ->
-        LaunchedEffect(key1 = viewModel.connection.value) {
+        LaunchedEffect(Unit) {
             viewModel.isInternetAvailable(context)
             if (!viewModel.connection.value)
-                Toast.makeText(context, "No internet connection", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show()
         }
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValue)
+                .padding(bottom = paddingValues.calculateBottomPadding())
         ) {
             Spacer(modifier = Modifier.height(24.dp))
             SearchBar(
@@ -87,13 +108,19 @@ fun HomeScreen(
                 value = searchText,
                 onValueChanged = viewModel::onSearchTextChangeWithUpdate,
                 onEnter = { viewModel.onSearchTextChangeWithUpdate(searchText, 0L) },
-                onDelete = { viewModel.onSearchTextChangeWithUpdate("", 0L) }
+                onDelete = {
+                    viewModel.onSearchTextChangeWithUpdate("", 0L)
+                    coroutineScope.launch {
+                        gridState.scrollToItem(0)
+                    }
+                }
             )
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if(!featuredState.isLoading) {
+
                     Spacer(modifier = Modifier.height(20.dp))
                     LazyRow(modifier = Modifier.fillMaxWidth()) {
                         item {
@@ -108,6 +135,9 @@ fun HomeScreen(
                                         viewModel.onSearchTextChangeWithUpdate(
                                             chip.title, 0L
                                         )
+                                        coroutineScope.launch {
+                                            gridState.scrollToItem(0)
+                                        }
                                         focusManager.clearFocus()
                                     },
                                     label = {
@@ -134,27 +164,25 @@ fun HomeScreen(
                             Spacer(modifier = Modifier.width(21.dp))
                         }
                     }
+
                 }
                 if(photoState.isLoading) {
                     Spacer(modifier = Modifier.height(16.dp))
-                    LinearProgressIndicator(
-                        color = MaterialTheme.colorScheme.secondaryContainer,
-                        trackColor = MaterialTheme.colorScheme.primaryContainer,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    LoadingBar(PaddingValues(0.dp))
                 } else {
                     if (photos != emptyList<PhotoDto>()) {
                         Spacer(modifier = Modifier.height(20.dp))
-                        LazyVerticalStaggeredGrid(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = paddingValues.calculateBottomPadding())
-                                .padding(horizontal = 24.dp),
-                            columns = StaggeredGridCells.Fixed(2),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp),
-                            verticalItemSpacing = 16.dp
-                        ) {
-                            if (photos != null) {
+
+                        Box(Modifier.fillMaxSize()) {
+
+                            LazyVerticalStaggeredGrid(
+                                modifier = Modifier
+                                    .padding(horizontal = 24.dp),
+                                columns = StaggeredGridCells.Fixed(2),
+                                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                                verticalItemSpacing = 16.dp,
+                                state = gridState
+                            ) {
                                 items(photos) { photo ->
                                     PhotoItem(
                                         item = photo,
@@ -171,19 +199,81 @@ fun HomeScreen(
                                     )
                                 }
                             }
-                        }
-                    } else {
-                        NoDataScreen(
-                            modifier = Modifier.fillMaxSize(),
-                            text = "No results found",
-                            textButton = "Explore",
-                            navController = navController,
-                            onClick = {
-                                viewModel.onSearchTextChangeWithUpdate("", 0L)
+                            if (photoState.searchResult?.next_page != null) {
+                                Column(modifier = Modifier.align(Alignment.BottomCenter)) {
+                                    AnimatedVisibility(
+                                        visible = gridState.isScrolled,
+                                        enter = fadeIn(),
+                                        exit = fadeOut()
+                                    ) {
+                                        Button(
+                                            onClick = {
+                                                viewModel.getPhotos(
+                                                    searchText,
+                                                    photoState.searchResult.page + 1
+                                                )
+                                                coroutineScope.launch {
+                                                    gridState.scrollToItem(0)
+                                                }
+                                            },
+                                            modifier = Modifier.padding(20.dp),
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = MaterialTheme.colorScheme.surface,
+                                                contentColor = MaterialTheme.colorScheme.onSurface
+                                            )
+                                        ) {
+                                            Text(text = "Next page")
+                                        }
+                                    }
+                                }
                             }
-                        )
-                    }
+                            if (photoState.searchResult?.page!! > 1) {
+                                Column(modifier = Modifier.align(Alignment.BottomCenter)) {
+                                    AnimatedVisibility(
+                                        visible = gridState.onTop,
+                                        enter = fadeIn(),
+                                        exit = fadeOut()
+                                    ) {
+                                        Button(
+                                            onClick = {
+                                                viewModel.getPhotos(
+                                                    searchText,
+                                                    photoState.searchResult.page - 1
+                                                )
+                                                coroutineScope.launch {
+                                                    gridState.scrollToItem(0)
+                                                }
+                                            },
+                                            modifier = Modifier.padding(20.dp),
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = MaterialTheme.colorScheme.surface,
+                                                contentColor = MaterialTheme.colorScheme.onSurface
+                                            )
+                                        ) {
+                                            Text(text = "Go to previous page")
+                                        }
+                                    }
+                                }
+                            }
+                        }
 
+                    } else {
+                        if (viewModel.connection.value) {
+                            NoDataScreen(
+                                modifier = Modifier.fillMaxSize(),
+                                text = "No results found",
+                                textButton = "Explore",
+                                navController = navController,
+                                onClick = {
+                                    viewModel.onSearchTextChangeWithUpdate("", 0L)
+                                }
+                            )
+                        } else {
+                            ErrorScreen(error = photoState.error) {
+                                viewModel.getPhotos(searchText)
+                            }
+                        }
+                    }
                 }
                 if (photoState.error.isNotBlank() && featuredState.error.isBlank()) {
                     ErrorScreen(error = photoState.error) {
@@ -200,3 +290,9 @@ fun HomeScreen(
         }
     }
 }
+
+val LazyStaggeredGridState.isScrolled: Boolean
+    get() = firstVisibleItemIndex > 20
+
+val LazyStaggeredGridState.onTop: Boolean
+    get() = firstVisibleItemIndex < 8

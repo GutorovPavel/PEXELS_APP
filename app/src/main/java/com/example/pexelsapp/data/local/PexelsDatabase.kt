@@ -10,8 +10,11 @@ import com.example.pexelsapp.data.local.entities.PhotoEntity
     entities = [
         PhotoEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = true,
+    autoMigrations = [
+        AutoMigration (from = 1, to = 2)
+    ]
 )
 abstract class PexelsDatabase: RoomDatabase() {
     abstract val dao: PexelsDao

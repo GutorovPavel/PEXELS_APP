@@ -1,5 +1,6 @@
 package com.example.pexelsapp.data.local.entities
 
+import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -13,7 +14,7 @@ data class PhotoEntity(
     @SerializedName("avg_color")
     val avgColor: String,
     val height: Int,
-    @PrimaryKey val id: Int,
+    val id: Int,
     val liked: Boolean,
     val photographer: String,
     @SerializedName("photographer_id")
@@ -22,7 +23,11 @@ data class PhotoEntity(
     val photographerUrl: String,
     @Embedded val src: Src,
     val url: String,
-    val width: Int
+    val width: Int,
+
+
+    @PrimaryKey(autoGenerate = true)
+    val pk: Int? = null
 ) {
     fun toPhoto(): Photo = Photo(
         alt,

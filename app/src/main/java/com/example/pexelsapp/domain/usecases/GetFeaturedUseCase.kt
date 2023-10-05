@@ -1,6 +1,5 @@
 package com.example.pexelsapp.domain.usecases
 
-import com.example.pexelsapp.data.remote.dto.toSearchResult
 import com.example.pexelsapp.domain.model.Featured
 import com.example.pexelsapp.domain.model.SearchResult
 import com.example.pexelsapp.domain.repository.PexelsRepository

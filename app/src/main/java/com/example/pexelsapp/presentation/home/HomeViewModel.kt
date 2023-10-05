@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -34,18 +35,13 @@ class HomeViewModel @Inject constructor(
     private val _connection = mutableStateOf(false)
     val connection: State<Boolean> = _connection
 
-//    private val _searchResult = MutableStateFlow(SearchResult(emptyList()))
-//    val searchResult = _searchResult.asStateFlow()
-//    private val _featured = MutableStateFlow(Featured(emptyList()))
-//    val featured = _featured.asStateFlow()
-
     init {
         getFeatured()
         getPhotos("")
     }
 
-    fun getPhotos(input: String) {
-        getPhotosUseCase(input).onEach {
+    fun getPhotos(input: String, page: Int? = 1) {
+        getPhotosUseCase(input, page).onEach {
             when(it) {
                 is Resource.Success -> {
                     _photoState.value = HomeState(searchResult = it.data)
@@ -77,9 +73,6 @@ class HomeViewModel @Inject constructor(
 
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
-
-//    private val _isSearching = MutableStateFlow(false)
-//    val isSearching = _isSearching.asStateFlow()
 
     private var job: Job? = null
 

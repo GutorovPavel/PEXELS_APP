@@ -1,12 +1,14 @@
 package com.example.pexelsapp.presentation.navigation
 
-import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.EaseOutCubic
 import androidx.compose.animation.core.EaseOutSine
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -27,102 +29,70 @@ fun NavGraph(
     NavHost(navController = navController, startDestination = Screen.Home.route) {
         composable(
             route = Screen.Home.route,
-//            enterTransition = {
-//                slideInHorizontally(
-//                    animationSpec = tween(
-//                        400,
-//                        easing = EaseOutCubic
-//                    ),
-//                    initialOffsetX = { fullWidth ->
-//                        -fullWidth
-//                    }
-//                )
-//            },
-//            exitTransition = {
-//                slideOutHorizontally(
-//                    animationSpec = tween(
-//                        400,
-//                        easing = EaseOutCubic
-//                    ),
-//                    targetOffsetX = { fullWidth ->
-//                        -fullWidth
-//                    }
-//                )
-//            },
-//            popEnterTransition = {
-//                slideInHorizontally(
-//                    animationSpec = tween(
-//                        400,
-//                        easing = EaseOutCubic
-//                    ),
-//                    initialOffsetX = { fullWidth ->
-//                        -fullWidth
-//                    }
-//                )
-//            },
-//            popExitTransition = {
-//                slideOutHorizontally(
-//                    animationSpec = tween(
-//                        400,
-//                        easing = EaseOutCubic
-//                    ),
-//                    targetOffsetX = { fullWidth ->
-//                        -fullWidth
-//                    }
-//                )
-//            }
+            enterTransition = {
+                slideInHorizontally(
+                    animationSpec = tween(
+                        200,
+                        easing = EaseOutSine
+                    ),
+                    initialOffsetX = { fullWidth ->
+                        -fullWidth
+                    }
+                )
+            },
+            exitTransition = {
+                if (targetState.destination.route?.contains(Screen.Detail.route) == true) {
+                    ExitTransition.None
+                } else {
+                    slideOutHorizontally(
+                        animationSpec = tween(
+                            200,
+                            easing = EaseOutSine
+                        ),
+                        targetOffsetX = { fullWidth ->
+                            -fullWidth
+                        }
+                    )
+                }
+            },
+            popEnterTransition = {
+                EnterTransition.None
+            }
+
         ) {
             HomeScreen(navController, paddingValues = paddingValues)
         }
         composable(
             route = Screen.Bookmarks.route,
-//            enterTransition = {
-//                if (route == Screen.Home.route) {
-//
-//                }
-//                 slideInHorizontally(
-//                    animationSpec = tween(
-//                        400,
-//                        easing = EaseOutCubic
-//                    ),
-//                    initialOffsetX = { fullWidth ->
-//                        fullWidth
-//                    }
-//                )
-//            },
-//            exitTransition = {
-//                slideOutHorizontally(
-//                    animationSpec = tween(
-//                        400,
-//                        easing = EaseOutCubic
-//                    ),
-//                    targetOffsetX = { fullWidth ->
-//                        fullWidth
-//                    }
-//                )
-//            },
-//            popEnterTransition = {
-//                slideInHorizontally(
-//                    animationSpec = tween(
-//                        400,
-//                        easing = EaseOutCubic
-//                    ),
-//                    initialOffsetX = { fullWidth ->
-//                        -fullWidth
-//                    }
-//                )
-//            },
-//            popExitTransition = {
-//                slideOutHorizontally(
-//                    animationSpec = tween(
-//                        400,
-//                        easing = EaseOutCubic
-//                    ),
-//                    targetOffsetX = { fullWidth ->
-//                        -fullWidth
-//                    }
-//                )
-//            }
+            enterTransition = {
+                slideInHorizontally(
+                    animationSpec = tween(
+                        200,
+                        easing = EaseOutSine
+                    ),
+                    initialOffsetX = { fullWidth ->
+                        fullWidth
+                    }
+                )
+            },
+            exitTransition = {
+                if (targetState.destination.route?.contains(Screen.Detail.route) == true) {
+                    ExitTransition.None
+                } else {
+                    slideOutHorizontally(
+                        animationSpec = tween(
+                            200,
+                            easing = EaseOutSine
+                        ),
+                        targetOffsetX = { fullWidth ->
+                            -fullWidth
+                        }
+                    )
+                }
+            },
+            popEnterTransition = {
+                EnterTransition.None
+            }
         ) {
             BookmarksScreen(navController, paddingValues = paddingValues)
         }
@@ -137,21 +107,36 @@ fun NavGraph(
                 }
             ),
             enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = tween(300)
+                slideInVertically(
+                    animationSpec = tween(
+                        300,
+                        easing = EaseOutCubic
+                    ),
+                    initialOffsetY = { fullHeight ->
+                        fullHeight
+                    }
                 )
             },
             exitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(300)
+                slideOutVertically(
+                    animationSpec = tween(
+                        300,
+                        easing = EaseOutCubic
+                    ),
+                    targetOffsetY = { fullHeight ->
+                        fullHeight
+                    }
                 )
             },
             popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(300)
+                slideOutVertically(
+                    animationSpec = tween(
+                        300,
+                        easing = EaseOutCubic
+                    ),
+                    targetOffsetY = { fullHeight ->
+                        fullHeight
+                    }
                 )
             }
         ) {

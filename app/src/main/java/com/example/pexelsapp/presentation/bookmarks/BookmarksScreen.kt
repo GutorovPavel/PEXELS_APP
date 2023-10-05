@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -56,7 +57,9 @@ fun BookmarksScreen(
 
         if (photos.value.isEmpty()) {
             NoDataScreen(
-                modifier = Modifier.fillMaxSize().padding(paddingValue),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValue),
                 text = "You haven't saved anything yet",
                 textButton = "Explore",
                 navController = navController

@@ -83,9 +83,9 @@ class DetailViewModel @Inject constructor(
         setIsSaved(true)
     }
 
-    fun deleteBookmark(photo: Photo) {
+    fun deleteBookmark(id: Int) {
         viewModelScope.launch {
-            deleteBookmarkUseCase(photo)
+            deleteBookmarkUseCase(id)
         }
         setIsSaved(false)
     }

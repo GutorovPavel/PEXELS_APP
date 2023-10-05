@@ -14,11 +14,11 @@ class PexelsRepositoryImpl @Inject constructor(
     private val api: PexelsApi,
     private val dao: PexelsDao
 ): PexelsRepository {
-    override suspend fun getPhotos(input: String): SearchResultDto {
+    override suspend fun getPhotos(input: String, page: Int): SearchResultDto {
         return if (input != "") {
-            api.getPhotos(input = input)
+            api.getPhotos(input = input, page = page)
         } else {
-            api.getCurated()
+            api.getCurated(page = page)
         }
     }
 
@@ -34,8 +34,8 @@ class PexelsRepositoryImpl @Inject constructor(
         dao.insertPhoto(photo)
     }
 
-    override suspend fun deletePhoto(photo: PhotoEntity) {
-        dao.deletePhoto(photo)
+    override suspend fun deletePhoto(id: Int) {
+        dao.deletePhoto(id)
     }
 
     override suspend fun getBookmarkById(id: Int): PhotoEntity? {

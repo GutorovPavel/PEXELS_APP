@@ -14,11 +14,13 @@ import javax.inject.Inject
 class GetPhotosUseCase @Inject constructor(
     private val repository: PexelsRepository
 ) {
-    operator fun invoke(input: String): Flow<Resource<SearchResult>> = flow {
-
+    operator fun invoke(input: String, page: Int? = 1): Flow<Resource<SearchResult>> = flow {
         try {
             emit(Resource.Loading())
-            val result = repository.getPhotos(input).toSearchResult()
+            val result =
+                if (page != null) repository.getPhotos(input, page).toSearchResult()
+                else repository.getPhotos(input, 1).toSearchResult()
+
             emit(Resource.Success(result))
         } catch (e: HttpException) {
             emit(Resource.Error(e.localizedMessage ?: Errors.HTTP_ERROR))

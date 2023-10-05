@@ -14,13 +14,15 @@ interface PexelsApi {
     suspend fun getPhotos(
         @Header("Authorization") token: String = API_KEY,
         @Query("query") input: String,
-        @Query("per_page") number: Int = 60
+        @Query("per_page") number: Int = 30,
+        @Query("page") page: Int
     ): SearchResultDto
 
     @GET("v1/curated")
     suspend fun getCurated(
         @Header("Authorization") token: String = API_KEY,
-        @Query("per_page") number: Int = 60
+        @Query("per_page") number: Int = 30,
+        @Query("page") page: Int
     ): SearchResultDto
 
     @GET("v1/photos/{id}")

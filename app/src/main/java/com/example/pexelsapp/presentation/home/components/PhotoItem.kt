@@ -2,6 +2,7 @@ package com.example.pexelsapp.presentation.home.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
@@ -22,7 +23,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
 import com.example.pexelsapp.data.remote.dto.PhotoDto
 import com.example.pexelsapp.util.pxToDp
 
@@ -40,6 +41,8 @@ fun PhotoItem(
     val multiplier = item.width.pxToDp(density) / (screenWidth/2 - 30.dp)
     val height = item.height.pxToDp(density) / multiplier
 
+    val showShimmer = remember { mutableStateOf(true) }
+
     Box (
         modifier = Modifier
             .fillMaxWidth()
@@ -48,14 +51,14 @@ fun PhotoItem(
             .clip(RoundedCornerShape(16.dp))
             .clickable { onClick(item) }
     ) {
-        Image(
-            painter = rememberAsyncImagePainter(
-                model = item.src.medium,
-                contentScale = ContentScale.FillHeight
-            ),
+        AsyncImage(
+            model = item.src.medium,
             contentDescription = "image",
             contentScale = ContentScale.FillWidth,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .background(ShimmerBrush(targetValue = 1300f, showShimmer = showShimmer.value))
+                .fillMaxSize(),
+            onSuccess = { showShimmer.value = false }
         )
     }
 }
@@ -75,7 +78,7 @@ fun Modifier.bounceClick() = composed {
         .clickable(
             interactionSource = remember { MutableInteractionSource() },
             indication = null,
-            onClick = {  }
+            onClick = { }
         )
         .pointerInput(buttonState) {
             awaitPointerEventScope {

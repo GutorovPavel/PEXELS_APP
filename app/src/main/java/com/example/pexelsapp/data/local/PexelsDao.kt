@@ -14,8 +14,8 @@ interface PexelsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPhoto(photo: PhotoEntity)
 
-    @Delete
-    suspend fun deletePhoto(photo: PhotoEntity)
+    @Query("DELETE FROM photos WHERE id = :id")
+    suspend fun deletePhoto(id: Int)
 
     @Query("SELECT * FROM photos WHERE id = :id")
     suspend fun getBookmarkById(id: Int): PhotoEntity?

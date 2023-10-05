@@ -8,7 +8,7 @@ class DeleteBookmarkUseCase @Inject constructor(
     private val repository: PexelsRepository
 ) {
 
-    suspend operator fun invoke(photo: Photo) {
-        repository.deletePhoto(photo.toPhotoEntity())
+    suspend operator fun invoke(id: Int) {
+        repository.deletePhoto(id)
     }
 }
