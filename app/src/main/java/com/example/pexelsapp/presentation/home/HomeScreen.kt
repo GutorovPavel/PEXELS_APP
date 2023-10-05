@@ -210,7 +210,7 @@ fun HomeScreen(
                                             onClick = {
                                                 viewModel.getPhotos(
                                                     searchText,
-                                                    photoState.searchResult.page + 1
+                                                    photoState.searchResult.page?.plus(1)
                                                 )
                                                 coroutineScope.launch {
                                                     gridState.scrollToItem(0)
@@ -238,7 +238,7 @@ fun HomeScreen(
                                             onClick = {
                                                 viewModel.getPhotos(
                                                     searchText,
-                                                    photoState.searchResult.page - 1
+                                                    photoState.searchResult.page?.minus(1)
                                                 )
                                                 coroutineScope.launch {
                                                     gridState.scrollToItem(0)
