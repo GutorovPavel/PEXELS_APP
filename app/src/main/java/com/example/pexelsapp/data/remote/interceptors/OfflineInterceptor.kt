@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 
 private fun isInternetAvailable(context: Context): Boolean {
-    var isConnected = false // Initial Value
+    var isConnected = false
     val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE)
             as ConnectivityManager
     if (connectivityManager.activeNetwork != null)

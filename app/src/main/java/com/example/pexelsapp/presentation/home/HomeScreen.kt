@@ -27,29 +27,27 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.InputChipDefaults
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.pexelsapp.R
 import com.example.pexelsapp.data.remote.dto.PhotoDto
 import com.example.pexelsapp.presentation.home.components.LoadingBar
 import com.example.pexelsapp.presentation.home.components.errorScreens.ErrorScreen
@@ -57,7 +55,6 @@ import com.example.pexelsapp.presentation.home.components.PhotoItem
 import com.example.pexelsapp.presentation.home.components.SearchBar
 import com.example.pexelsapp.presentation.home.components.errorScreens.NoDataScreen
 import com.example.pexelsapp.presentation.navigation.Screen
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,7 +70,7 @@ fun HomeScreen(
     val featuredState = viewModel.featuredState.value
     val chips = featuredState.featured?.collections
 
-    val searchText by viewModel.searchText.collectAsState()
+    val searchText by viewModel.searchText.collectAsStateWithLifecycle()
 
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -81,10 +78,6 @@ fun HomeScreen(
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-
-    var page by remember {
-        mutableIntStateOf(1)
-    }
 
     val gridState = rememberLazyStaggeredGridState()
     val coroutineScope = rememberCoroutineScope()
@@ -127,7 +120,7 @@ fun HomeScreen(
                             Spacer(modifier = Modifier.width(21.dp))
                         }
                         if (chips != null) {
-                            itemsIndexed(chips) { index, chip ->
+                            itemsIndexed(chips) { _, chip ->
                                 InputChip(
                                     modifier = Modifier.padding(horizontal = 6.dp), // gap between items
                                     selected = (chip.title.lowercase() == searchText.lowercase()),
@@ -222,7 +215,7 @@ fun HomeScreen(
                                                 contentColor = MaterialTheme.colorScheme.onSurface
                                             )
                                         ) {
-                                            Text(text = "Next page")
+                                            Text(text = stringResource(R.string.next_page))
                                         }
                                     }
                                 }
@@ -238,7 +231,7 @@ fun HomeScreen(
                                             onClick = {
                                                 viewModel.getPhotos(
                                                     searchText,
-                                                    photoState.searchResult.page?.minus(1)
+                                                    photoState.searchResult.page.minus(1)
                                                 )
                                                 coroutineScope.launch {
                                                     gridState.scrollToItem(0)
@@ -250,7 +243,7 @@ fun HomeScreen(
                                                 contentColor = MaterialTheme.colorScheme.onSurface
                                             )
                                         ) {
-                                            Text(text = "Go to previous page")
+                                            Text(text = stringResource(R.string.go_to_previous_page))
                                         }
                                     }
                                 }
@@ -261,27 +254,27 @@ fun HomeScreen(
                         if (viewModel.connection.value) {
                             NoDataScreen(
                                 modifier = Modifier.fillMaxSize(),
-                                text = "No results found",
-                                textButton = "Explore",
+                                text = stringResource(R.string.no_results_found),
+                                textButton = stringResource(R.string.explore),
                                 navController = navController,
                                 onClick = {
                                     viewModel.onSearchTextChangeWithUpdate("", 0L)
                                 }
                             )
                         } else {
-                            ErrorScreen(error = photoState.error) {
+                            ErrorScreen {
                                 viewModel.getPhotos(searchText)
                             }
                         }
                     }
                 }
                 if (photoState.error.isNotBlank() && featuredState.error.isBlank()) {
-                    ErrorScreen(error = photoState.error) {
+                    ErrorScreen {
                         viewModel.getPhotos(searchText)
                     }
                 }
                 if (featuredState.error.isNotBlank()) {
-                    ErrorScreen(error = photoState.error) {
+                    ErrorScreen {
                         viewModel.getPhotos(searchText)
                         viewModel.getFeatured()
                     }

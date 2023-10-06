@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pexels App</string>
+    <string name="bookmarks">Закладки</string>
+    <string name="you_haven_t_saved_anything_yet">Вы еще ничего не сохранили</string>
+    <string name="explore">Искать</string>
+    <string name="image_not_found">Изображение не найдено</string>
+    <string name="download">Скачать</string>
+    <string name="try_again">Попробуйте еще раз</string>
+    <string name="search">Поиск</string>
+    <string name="next_page">Следующая страница</string>
+    <string name="go_to_previous_page">Предыдущая страница</string>
+    <string name="no_results_found">Нет результатов</string>
+</resources>

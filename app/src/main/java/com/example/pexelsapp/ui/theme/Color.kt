@@ -13,6 +13,7 @@ val Pink40 = Color(0xFF7D5260)
 //Custom colors
 val PrimaryRed = Color(0xFFBB1020)
 val Black = Color(0xFF1E1E1E)
+val SemiTransparent = Color(0x66000000)
 
 val LightBlue = Color(0xFFF3F5F9)
 val Gray = Color(0xFF868686)

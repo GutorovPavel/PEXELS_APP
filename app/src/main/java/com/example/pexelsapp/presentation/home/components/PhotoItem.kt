@@ -1,7 +1,6 @@
 package com.example.pexelsapp.presentation.home.components
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -56,7 +55,7 @@ fun PhotoItem(
             contentDescription = "image",
             contentScale = ContentScale.FillWidth,
             modifier = Modifier
-                .background(ShimmerBrush(targetValue = 1300f, showShimmer = showShimmer.value))
+                .background(shimmerBrush(targetValue = 1300f, showShimmer = showShimmer.value))
                 .fillMaxSize(),
             onSuccess = { showShimmer.value = false }
         )

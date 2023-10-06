@@ -17,9 +17,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import com.example.pexelsapp.data.remote.dto.PhotoDto
 import com.example.pexelsapp.domain.model.Photo
 import com.example.pexelsapp.presentation.home.components.bounceClick
 import com.example.pexelsapp.util.pxToDp
@@ -51,13 +49,13 @@ fun BookmarkItem(
                 model = item.src.large2x,
                 contentScale = ContentScale.FillHeight
             ),
-            contentDescription = "image",
+            contentDescription = "",
             contentScale = ContentScale.FillWidth,
             modifier = Modifier.fillMaxSize()
         )
         Row(
             modifier = Modifier
-                .background(Color(0x66000000))
+                .background(MaterialTheme.colorScheme.tertiaryContainer)
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter),
             horizontalArrangement = Arrangement.Center,

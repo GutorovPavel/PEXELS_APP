@@ -3,7 +3,6 @@ package com.example.pexelsapp.presentation.home.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -24,20 +23,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.example.pexelsapp.R
 import com.example.pexelsapp.ui.theme.fontFamily
 
 @Composable
@@ -71,7 +68,7 @@ fun SearchBar(
             Icon(
                 imageVector = Icons.Default.Search,
                 tint = MaterialTheme.colorScheme.primaryContainer,
-                contentDescription = "search",
+                contentDescription = "",
                 modifier = Modifier.weight(1f)
             )
             Row(
@@ -103,7 +100,7 @@ fun SearchBar(
                         ) {
                             if (value.isEmpty()) {
                                 Text(
-                                    text = "Search",
+                                    text = stringResource(R.string.search),
                                     color = MaterialTheme.colorScheme.onTertiaryContainer
                                 )
                             }
@@ -126,7 +123,7 @@ fun SearchBar(
                         Icon(
                             imageVector = Icons.Default.Close,
                             tint = MaterialTheme.colorScheme.onTertiaryContainer,
-                            contentDescription = "close"
+                            contentDescription = ""
                         )
                     }
                 }

@@ -45,7 +45,7 @@ fun NoDataScreen(
                 if (currentDestination?.route != Screen.Home.route) {
                     navController.navigate(Screen.Home.route) {
                         if (currentDestination != null) {
-                            popUpTo(currentDestination.id) {
+                            popUpTo(id = currentDestination.id) {
                                 saveState = true
                                 inclusive = true
                             }

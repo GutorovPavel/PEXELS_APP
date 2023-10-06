@@ -1,7 +1,5 @@
 package com.example.pexelsapp.data.local.entities
 
-import android.graphics.Bitmap
-import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -25,7 +23,6 @@ data class PhotoEntity(
     @Embedded val src: Src,
     val url: String,
     val width: Int,
-//    val bitmap: Bitmap? = null,
 
     @PrimaryKey(autoGenerate = true)
     val pk: Int? = null

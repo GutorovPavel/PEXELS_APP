@@ -1,6 +1,5 @@
 package com.example.pexelsapp.domain.usecases
 
-import com.example.pexelsapp.domain.model.Photo
 import com.example.pexelsapp.domain.repository.PexelsRepository
 import javax.inject.Inject
 

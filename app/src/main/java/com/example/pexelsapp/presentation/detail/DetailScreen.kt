@@ -1,9 +1,6 @@
 package com.example.pexelsapp.presentation.detail
 
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTransformGestures
@@ -22,17 +19,14 @@ import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,19 +37,15 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import com.example.pexelsapp.R
 import com.example.pexelsapp.presentation.home.components.LoadingBar
-import com.example.pexelsapp.presentation.home.components.ShimmerBrush
 import com.example.pexelsapp.presentation.home.components.errorScreens.NoDataScreen
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,10 +58,8 @@ fun DetailScreen(
     val isSaved = viewModel.isSaved.value
 
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
 
     val isImageLoading = remember { mutableStateOf(true) }
-    val showLoading = remember { mutableStateOf(false) }
     var scale by remember { mutableFloatStateOf(1f) }
 
 
@@ -89,7 +77,7 @@ fun DetailScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "back",
+                            contentDescription = "",
                             modifier = Modifier.padding(10.dp)
                         )
                     }
@@ -107,15 +95,11 @@ fun DetailScreen(
         }
     ) { paddingValues ->
 
-//        LaunchedEffect(Unit) {
-//            delay(400)
-//            showLoading.value = true
-//        }
         if (state.error.isNotBlank()) {
             NoDataScreen(
                 modifier = Modifier.fillMaxSize(),
-                text = "Image not found",
-                textButton = "Explore",
+                text = stringResource(R.string.image_not_found),
+                textButton = stringResource(R.string.explore),
                 navController = navController
             )
         } else {
@@ -134,7 +118,7 @@ fun DetailScreen(
                             .clip(RoundedCornerShape(16.dp))
                             .weight(1f)
                             .pointerInput(Unit) {
-                                detectTransformGestures { centroid, pan, zoom, rotation ->
+                                detectTransformGestures { _, _, zoom, _ ->
                                     scale *= zoom
                                 }
                             },
@@ -143,7 +127,7 @@ fun DetailScreen(
                         if (state.photo != null) {
                             AsyncImage(
                                 model = state.photo.src.large,
-                                contentDescription = "image",
+                                contentDescription = "",
                                 contentScale = ContentScale.FillWidth,
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -188,7 +172,7 @@ fun DetailScreen(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Download,
-                                    contentDescription = "download",
+                                    contentDescription = "",
                                     tint = Color.White,
                                     modifier = Modifier.padding(14.dp)
                                 )
@@ -197,7 +181,7 @@ fun DetailScreen(
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Text(
-                                    text = "Download",
+                                    text = stringResource(R.string.download),
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(end = 10.dp),
@@ -227,7 +211,7 @@ fun DetailScreen(
 
                             Icon(
                                 painter = painter,
-                                contentDescription = "add bookmark",
+                                contentDescription = "",
                                 modifier = Modifier.padding(14.dp),
                                 tint = tint
                             )
