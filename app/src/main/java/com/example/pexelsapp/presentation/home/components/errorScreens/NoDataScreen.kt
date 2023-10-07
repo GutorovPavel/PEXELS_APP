@@ -64,7 +64,7 @@ fun NoDataScreen(
             }) {
                 Text(
                     text = textButton,
-                    color = MaterialTheme.colorScheme.primaryContainer,
+                    color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(8.dp)
                 )

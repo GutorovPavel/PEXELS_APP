@@ -54,7 +54,7 @@ fun SearchBar(
         elevation = CardDefaults.cardElevation(0.dp),
         shape = CircleShape,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
+            containerColor = MaterialTheme.colorScheme.primaryContainer
         )
     ) {
         Row(
@@ -67,7 +67,7 @@ fun SearchBar(
         ) {
             Icon(
                 imageVector = Icons.Default.Search,
-                tint = MaterialTheme.colorScheme.primaryContainer,
+                tint = MaterialTheme.colorScheme.primary,
                 contentDescription = "",
                 modifier = Modifier.weight(1f)
             )

@@ -73,7 +73,7 @@ fun DetailScreen(
                             .clickable {
                                 navController.popBackStack()
                             }
-                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .background(MaterialTheme.colorScheme.primaryContainer)
                     ) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
@@ -150,17 +150,15 @@ fun DetailScreen(
                             modifier = Modifier
                                 .width(180.dp)
                                 .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.secondaryContainer)
+                                .background(MaterialTheme.colorScheme.primaryContainer)
                                 .clickable {
                                     state.photo?.let {
                                         viewModel.downloadImage(it.src.original)
-                                        Toast
-                                            .makeText(
-                                                context,
-                                                "Image saved",
-                                                Toast.LENGTH_SHORT
-                                            )
-                                            .show()
+                                        Toast.makeText(
+                                            context,
+                                            context.getString(R.string.saved),
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                     }
                                 },
                             verticalAlignment = Alignment.CenterVertically
@@ -168,7 +166,7 @@ fun DetailScreen(
                             Box(
                                 modifier = Modifier
                                     .clip(CircleShape)
-                                    .background(MaterialTheme.colorScheme.primaryContainer)
+                                    .background(MaterialTheme.colorScheme.primary)
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Download,
@@ -198,7 +196,7 @@ fun DetailScreen(
                                         else viewModel.deleteBookmark(it.id)
                                     }
                                 }
-                                .background(MaterialTheme.colorScheme.secondaryContainer)
+                                .background(MaterialTheme.colorScheme.primaryContainer)
                                 .align(Alignment.CenterEnd)
                         ) {
                             val painter =
@@ -206,7 +204,7 @@ fun DetailScreen(
                                 else painterResource(id = R.drawable.bookmarks_inactive)
 
                             val tint =
-                                if (isSaved) MaterialTheme.colorScheme.primaryContainer
+                                if (isSaved) MaterialTheme.colorScheme.primary
                                 else MaterialTheme.colorScheme.onSurface
 
                             Icon(

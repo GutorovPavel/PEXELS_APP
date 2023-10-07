@@ -25,8 +25,8 @@ class HomeViewModel @Inject constructor(
     private val getFeaturedUseCase: GetFeaturedUseCase
 ): ViewModel() {
 
-    private val _photoState = mutableStateOf(HomeState())
-    val photoState: State<HomeState> = _photoState
+    private val _photoState = mutableStateOf(PhotoState())
+    val photoState: State<PhotoState> = _photoState
     private val _featuredState = mutableStateOf(FeaturedState())
     val featuredState: State<FeaturedState> = _featuredState
 
@@ -42,13 +42,13 @@ class HomeViewModel @Inject constructor(
         getPhotosUseCase(input, page).onEach {
             when(it) {
                 is Resource.Success -> {
-                    _photoState.value = HomeState(searchResult = it.data)
+                    _photoState.value = PhotoState(searchResult = it.data)
                 }
                 is Resource.Error -> {
-                    _photoState.value = HomeState(error = it.message ?: "An unexpected error occurred...")
+                    _photoState.value = PhotoState(error = it.message ?: "An unexpected error occurred...")
                 }
                 is Resource.Loading -> {
-                    _photoState.value = HomeState(isLoading = true)
+                    _photoState.value = PhotoState(isLoading = true)
                 }
             }
         }.launchIn(viewModelScope)

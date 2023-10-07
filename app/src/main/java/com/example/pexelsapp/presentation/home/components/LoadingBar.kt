@@ -29,8 +29,8 @@ fun LoadingBar(
         enter = fadeIn()
     ) {
         LinearProgressIndicator(
-            color = MaterialTheme.colorScheme.secondaryContainer,
-            trackColor = MaterialTheme.colorScheme.primaryContainer,
+            color = MaterialTheme.colorScheme.primaryContainer,
+            trackColor = MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(paddingValues)

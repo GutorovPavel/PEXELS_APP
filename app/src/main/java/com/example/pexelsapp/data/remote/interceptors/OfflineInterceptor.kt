@@ -2,6 +2,7 @@ package com.example.pexelsapp.data.remote.interceptors
 
 import android.content.Context
 import android.net.ConnectivityManager
+import dagger.hilt.android.qualifiers.ApplicationContext
 import okhttp3.CacheControl
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -17,7 +18,7 @@ private fun isInternetAvailable(context: Context): Boolean {
         isConnected = true
     return isConnected
 }
-class OfflineInterceptor @Inject constructor(
+class OfflineInterceptor (
     private val context: Context
 ): Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {

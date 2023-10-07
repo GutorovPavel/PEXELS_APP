@@ -37,7 +37,7 @@ fun ErrorScreen(
             TextButton(onClick = onClick) {
                 Text(
                     text = stringResource(R.string.try_again),
-                    color = MaterialTheme.colorScheme.primaryContainer,
+                    color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(10.dp)
                 )

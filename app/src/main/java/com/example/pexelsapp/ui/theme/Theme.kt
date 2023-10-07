@@ -18,22 +18,24 @@ import androidx.core.view.WindowCompat
 
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
+//    primary = Purple80,
     secondary = PurpleGrey80,
     tertiary = Pink80,
-    primaryContainer = PrimaryRed,
-    secondaryContainer = DarkGray,
+    primary = PrimaryRed,
+    primaryContainer = DarkGray,
+//    secondaryContainer = DarkGray,
     onTertiaryContainer = LightGray,
     onSurface = Color.White,
     tertiaryContainer = SemiTransparent
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
+//    primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40,
-    primaryContainer = PrimaryRed,
-    secondaryContainer = LightBlue,
+    primary = PrimaryRed,
+    primaryContainer = LightBlue,
+//    secondaryContainer = LightBlue,
     onTertiaryContainer = Gray,
     onSurface = Black,
     tertiaryContainer = SemiTransparent
@@ -58,8 +60,7 @@ fun PexelsAppTheme(
 ) {
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            if (darkTheme) DarkColorScheme else LightColorScheme
         }
 
         darkTheme -> DarkColorScheme

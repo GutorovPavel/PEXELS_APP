@@ -6,20 +6,29 @@ import android.os.Environment
 import androidx.core.net.toUri
 import com.example.pexelsapp.domain.downloader.Downloader
 import com.example.pexelsapp.util.Constants
+import java.io.File
 import javax.inject.Inject
 
 class DownloaderImpl @Inject constructor(
     private val context: Context
 ): Downloader {
 
+    private val directory = File(Environment.DIRECTORY_PICTURES)
     private val downloadManager = context.getSystemService(DownloadManager::class.java)
     override fun download(url: String): Long {
+
+        val title = url.substring(url.lastIndexOf("/") + 1) + "1"
+
+        if (!directory.exists()) {
+            directory.mkdirs()
+        }
+
         val request = DownloadManager.Request(url.toUri())
-            .setMimeType("image/jpeg")
+            .setMimeType("image/*")
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
-            .setTitle("${System.currentTimeMillis()}.jpeg")
+            .setTitle(title)
             .addRequestHeader("Authorization", Constants.API_KEY)
-            .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, "image.jpeg")
+            .setDestinationInExternalPublicDir(directory.toString(), title)
         return downloadManager.enqueue(request)
     }
 }

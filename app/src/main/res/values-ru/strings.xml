@@ -11,4 +11,6 @@
     <string name="next_page">Следующая страница</string>
     <string name="go_to_previous_page">Предыдущая страница</string>
     <string name="no_results_found">Нет результатов</string>
+    <string name="no_internet_connection">Отсутствует соединение с интернетом</string>
+    <string name="saved">Изображение сохранено</string>
 </resources>

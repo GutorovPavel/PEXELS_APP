@@ -70,18 +70,19 @@ fun NavigationBarComponent(
         ) {
             items.forEachIndexed { index, item ->
                 val isSelected = selectedItemIndex == index
+                val visuallySelected = currentDestination?.route == item.route
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .weight(0.5f)
                 ) {
                     AnimatedVisibility(
-                        visible = isSelected,
+                        visible = visuallySelected,
                         enter = fadeIn(),
                         exit = fadeOut()
                     ) {
                         Divider(
-                            color = MaterialTheme.colorScheme.primaryContainer,
+                            color = MaterialTheme.colorScheme.primary,
                             thickness = 3.dp,
                             modifier = Modifier
                                 .width(20.dp)
@@ -112,12 +113,12 @@ fun NavigationBarComponent(
                         icon = {
                             val painter = if (isSystemInDarkTheme()) {
                                 // check icon not by index cause of ability to navigate not from navigation bar
-                                if (currentDestination?.route == item.route) painterResource(
+                                if (visuallySelected) painterResource(
                                     item.selectedIconNight
                                 )
                                 else painterResource(item.unselectedIcon)
                             } else {
-                                if (currentDestination?.route == item.route) painterResource(
+                                if (visuallySelected) painterResource(
                                     item.selectedIcon
                                 )
                                 else painterResource(item.unselectedIcon)

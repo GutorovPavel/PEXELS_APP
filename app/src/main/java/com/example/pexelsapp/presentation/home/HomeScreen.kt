@@ -9,9 +9,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
@@ -40,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -86,13 +90,21 @@ fun HomeScreen(
         LaunchedEffect(Unit) {
             viewModel.isInternetAvailable(context)
             if (!viewModel.connection.value)
-                Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.no_internet_connection),
+                    Toast.LENGTH_SHORT
+                ).show()
         }
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValue)
-                .padding(bottom = paddingValues.calculateBottomPadding())
+                .padding(
+                    bottom = paddingValues.calculateBottomPadding() - WindowInsets.navigationBars
+                        .asPaddingValues(LocalDensity.current)
+                        .calculateBottomPadding()
+                )
         ) {
             Spacer(modifier = Modifier.height(24.dp))
             SearchBar(
@@ -141,8 +153,8 @@ fun HomeScreen(
                                         )
                                     },
                                     colors = InputChipDefaults.inputChipColors(
-                                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                                        selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                        selectedContainerColor = MaterialTheme.colorScheme.primary,
                                         labelColor = MaterialTheme.colorScheme.onSurface,
                                         selectedLabelColor = Color.White
                                     ),
@@ -249,7 +261,6 @@ fun HomeScreen(
                                 }
                             }
                         }
-
                     } else {
                         if (viewModel.connection.value) {
                             NoDataScreen(
@@ -264,6 +275,7 @@ fun HomeScreen(
                         } else {
                             ErrorScreen {
                                 viewModel.getPhotos(searchText)
+                                viewModel.getFeatured()
                             }
                         }
                     }
