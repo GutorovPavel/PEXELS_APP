@@ -13,7 +13,7 @@ class DownloaderImpl @Inject constructor(
     private val context: Context
 ): Downloader {
 
-    private val directory = File(Environment.DIRECTORY_PICTURES)
+    private var directory = File(Environment.DIRECTORY_DOWNLOADS)
     private val downloadManager = context.getSystemService(DownloadManager::class.java)
     override fun download(url: String): Long {
 
