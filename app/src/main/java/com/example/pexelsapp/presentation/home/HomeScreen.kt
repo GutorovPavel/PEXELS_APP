@@ -273,16 +273,17 @@ fun HomeScreen(
                                 }
                             )
                         } else {
-                            ErrorScreen {
-                                viewModel.getPhotos(searchText)
-                                viewModel.getFeatured()
+                            if (photoState.error.isNotBlank()) {
+                                ErrorScreen {
+                                    viewModel.getPhotos(searchText)
+                                }
+                                Toast.makeText(
+                                    context,
+                                    photoState.error,
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
-                    }
-                }
-                if (photoState.error.isNotBlank() && featuredState.error.isBlank()) {
-                    ErrorScreen {
-                        viewModel.getPhotos(searchText)
                     }
                 }
                 if (featuredState.error.isNotBlank()) {
@@ -290,6 +291,21 @@ fun HomeScreen(
                         viewModel.getPhotos(searchText)
                         viewModel.getFeatured()
                     }
+                    Toast.makeText(
+                        context,
+                        photoState.error,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                if (photoState.error.isNotBlank()) {
+                    ErrorScreen {
+                        viewModel.getPhotos(searchText)
+                    }
+                    Toast.makeText(
+                        context,
+                        photoState.error,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
